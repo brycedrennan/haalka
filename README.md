@@ -196,6 +196,7 @@ Or with [`just`](https://github.com/casey/just), e.g. `just example snake -r`.
 - install [just](https://github.com/casey/just?tab=readme-ov-file#installation)
 - install [nickel](https://github.com/tweag/nickel?tab=readme-ov-file#run) for modifying CI configuration (`nickel` must be in your PATH)
 - install [File Watcher](https://marketplace.visualstudio.com/items?itemName=appulate.filewatcher) for automatically syncing nickels
+- run `./scripts/dev_setup.sh` to initialize submodules, install tools and system dependencies, and fetch cargo dependencies
 
 ## license
 All code in this repository is dual-licensed under either:
