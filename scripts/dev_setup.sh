@@ -1,32 +1,29 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Move to repository root (file is <repo>/.devcontainer/on_start.sh or similar)
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-cd "$REPO_ROOT"
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y build-essential git curl ca-certificates pkg-config libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
 
-# Initialise / update submodules
-git submodule update --init --recursive
+git submodule update --init --recursive || true
 
-# System packages (dev headers + just) – silent, minimal, non-interactive
-if command -v apt-get >/dev/null 2>&1; then
-  export DEBIAN_FRONTEND=noninteractive
-  sudo apt-get -qq update
-  sudo apt-get -y --no-install-recommends install \
-       libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev just
+if ! command -v nix >/dev/null 2>&1; then
+  curl -L https://nixos.org/nix/install | bash -s -- --no-daemon
+  . /etc/profile.d/nix.sh || true
 fi
 
-# Nickel CLI (static Linux binary, ~6 MB)
-if ! command -v nickel >/dev/null 2>&1; then
-  curl -sL \
-    https://github.com/tweag/nickel/releases/latest/download/nickel-x86_64-unknown-linux-gnu.tar.gz \
-  | sudo tar -xz -C /usr/local/bin --strip-components=1 nickel
+nix profile install github:tweag/nickel || true
+nickel --version
+
+if ! command -v rustup >/dev/null 2>&1; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+  . "$HOME/.cargo/env"
 fi
 
-# WebAssembly target (unzips pre-built stdlib)
-if ! rustup target list --installed | grep -q wasm32-unknown-unknown; then
-  rustup target add wasm32-unknown-unknown
-fi
+rustup toolchain install stable
+rustup toolchain install nightly
+rustup component add clippy rustfmt --toolchain nightly
 
-# Prefetch crate graph (quiet)
-cargo fetch --locked --all-targets --quiet
+command -v just >/dev/null 2>&1 || cargo install just --locked
+command -v cargo-binstall >/dev/null 2>&1 || cargo install cargo-binstall --locked
+cargo binstall --no-confirm --continue-on-failure cargo-all-features || true
+command -v cargo-cache >/dev/null 2>&1 || cargo install cargo-cache --locked
