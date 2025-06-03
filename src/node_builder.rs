@@ -6,7 +6,6 @@ use super::utils::{clone, spawn};
 use apply::Apply;
 use bevy_async_ecs::AsyncWorld;
 use bevy_ecs::prelude::*;
-use bevy_hierarchy::prelude::*;
 use bevy_tasks::Task;
 use bevy_utils::prelude::*;
 use futures_signals::{

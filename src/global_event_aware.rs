@@ -9,7 +9,6 @@ use super::{
 };
 use apply::Apply;
 use bevy_ecs::prelude::*;
-use bevy_hierarchy::prelude::*;
 
 /// Enables registering "global" event listeners on the [`UiRoot`] node. The [`UiRoot`] must be
 /// manually registered with [`UiRootable::ui_root`](super::element::UiRootable::ui_root) for this

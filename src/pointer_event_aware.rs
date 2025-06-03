@@ -12,7 +12,6 @@ use apply::Apply;
 use bevy_app::prelude::*;
 use bevy_derive::*;
 use bevy_ecs::prelude::*;
-use bevy_hierarchy::prelude::*;
 use bevy_log::prelude::*;
 use bevy_picking::{
     backend::prelude::*,
