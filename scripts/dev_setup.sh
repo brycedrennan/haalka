@@ -7,7 +7,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y build-
 git submodule update --init --recursive || true
 
 if ! command -v nix >/dev/null 2>&1; then
-  curl -L https://nixos.org/nix/install | bash -s -- --no-daemon
+  curl -L https://nixos.org/nix/install | bash -s -- --daemon
   . /etc/profile.d/nix.sh || true
 fi
 
