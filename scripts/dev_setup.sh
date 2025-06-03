@@ -2,7 +2,9 @@
 set -euo pipefail
 
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y build-essential git curl ca-certificates pkg-config libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
+DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
+  build-essential git curl ca-certificates pkg-config \
+  libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
 
 git submodule update --init --recursive || true
 
@@ -11,10 +13,13 @@ if ! command -v nix >/dev/null 2>&1; then
   . /etc/profile.d/nix.sh || true
 fi
 
-bash echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh || true
+mkdir -p /etc/nix
+grep -q '^experimental-features = nix-command flakes' /etc/nix/nix.conf 2>/dev/null || \
+  echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf
 
-nix profile install github:tweag/nickel || true
-nickel --version
+nix profile install --accept-flake-config github:tweag/nickel || true
+command -v nickel >/dev/null 2>&1 && nickel --version || true
 
 if ! command -v rustup >/dev/null 2>&1; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
