@@ -10,7 +10,6 @@ use super::{
 use apply::Apply;
 use bevy_app::prelude::*;
 use bevy_ecs::{prelude::*, system::SystemParam};
-use bevy_hierarchy::prelude::*;
 use bevy_math::prelude::*;
 use bevy_transform::prelude::*;
 use bevy_ui::prelude::*;
