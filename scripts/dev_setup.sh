@@ -11,6 +11,8 @@ if ! command -v nix >/dev/null 2>&1; then
   . /etc/profile.d/nix.sh || true
 fi
 
+bash echo 'experimental-features = nix-command flakes' >> /etc/nix/nix.conf . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+
 nix profile install github:tweag/nickel || true
 nickel --version
 
